@@ -1,0 +1,398 @@
+/* ==========================================================================
+   CINEMATIC EFFECTS & CINEMA PLAYER STYLING
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   FILM GRAIN OVERLAY (Subtle 35mm Analog Warmth)
+   -------------------------------------------------------------------------- */
+.film-grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* --------------------------------------------------------------------------
+   ANAMORPHIC LETTERBOX BARS (Optional 2.39:1 Presentation)
+   -------------------------------------------------------------------------- */
+.letterbox-bar {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 0px;
+  background-color: #000;
+  z-index: 9998;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.letterbox-top {
+  top: 0;
+}
+
+.letterbox-bottom {
+  bottom: 0;
+}
+
+body.cinema-mode .letterbox-bar {
+  height: 48px;
+}
+
+/* --------------------------------------------------------------------------
+   CAMERA FRAMING MARKS & RETICLE
+   -------------------------------------------------------------------------- */
+.camera-crosshair {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+.camera-crosshair::before,
+.camera-crosshair::after {
+  content: '';
+  position: absolute;
+  background-color: #ffffff;
+}
+
+.camera-crosshair::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.camera-crosshair::after {
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  transform: translateX(-50%);
+}
+
+.frame-corner {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: rgba(255, 255, 255, 0.4);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.frame-corner-tl {
+  top: 1.25rem;
+  left: 1.25rem;
+  border-width: 2px 0 0 2px;
+}
+
+.frame-corner-tr {
+  top: 1.25rem;
+  right: 1.25rem;
+  border-width: 2px 2px 0 0;
+}
+
+.frame-corner-bl {
+  bottom: 1.25rem;
+  left: 1.25rem;
+  border-width: 0 0 2px 2px;
+}
+
+.frame-corner-br {
+  bottom: 1.25rem;
+  right: 1.25rem;
+  border-width: 0 2px 2px 0;
+}
+
+/* --------------------------------------------------------------------------
+   CINEMA VIDEO MODAL (Fullscreen YouTube & Video Player)
+   -------------------------------------------------------------------------- */
+.cinema-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.94);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2rem;
+}
+
+.cinema-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.cinema-modal-inner {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.96);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cinema-modal.active .cinema-modal-inner {
+  transform: scale(1);
+}
+
+.cinema-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.modal-film-title {
+  font-family: var(--font-serif-display);
+  font-size: 1.3rem;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.modal-close-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border-medium);
+  border-radius: 50px;
+  transition: var(--transition-fast);
+}
+
+.modal-close-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cinema-video-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border: 1px solid var(--border-medium);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+  overflow: hidden;
+}
+
+.cinema-video-frame iframe,
+.cinema-video-frame video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.cinema-modal-footer {
+  margin-top: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.modal-role-info {
+  color: var(--accent-gold);
+}
+
+/* --------------------------------------------------------------------------
+   IMAGE LIGHTBOX MODAL WITH CAMERA TELEMETRY
+   -------------------------------------------------------------------------- */
+.photo-lightbox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: rgba(3, 3, 3, 0.96);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 2.5rem;
+}
+
+.photo-lightbox.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-content-box {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2.5rem;
+  max-width: 1400px;
+  width: 100%;
+  max-height: 90vh;
+  align-items: center;
+}
+
+.lightbox-img-wrap {
+  width: 100%;
+  max-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lightbox-img-wrap img {
+  max-height: 80vh;
+  max-width: 100%;
+  object-fit: contain;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+}
+
+.lightbox-telemetry-panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-medium);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.exif-tag {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-gold);
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.exif-title {
+  font-family: var(--font-serif-display);
+  font-size: 1.4rem;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.exif-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.exif-label {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.exif-val {
+  color: var(--text-primary);
+  margin-top: 0.2rem;
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE CURTAIN MENU
+   -------------------------------------------------------------------------- */
+.mobile-curtain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #08080a;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-curtain.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.mobile-curtain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-nav-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  list-style: none;
+  margin: 3rem 0;
+}
+
+.mobile-nav-links a {
+  font-family: var(--font-serif-display);
+  font-size: 2.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.mobile-nav-links a:hover {
+  color: var(--accent-gold);
+}
+
+.mobile-curtain-footer {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.15em;
+}
+
+@media (max-width: 900px) {
+  .lightbox-content-box {
+    grid-template-columns: 1fr;
+    max-height: 95vh;
+  }
+  .lightbox-telemetry-panel {
+    display: none;
+  }
+}
